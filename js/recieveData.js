@@ -11,18 +11,18 @@ function parseAndProcess (data) {
 function processDateLines (data) {
 	for (x in data.tickers) {
 		for (var y = 0; y < data.tickers[x].data.length; y++) {
-			dailyStats = data.tickers[x].data[y].split(/,/g).map(function (n) {
-				return parseFloat(n);
-			});
+			var counter = 0;
+
+			dailyStats = data.tickers[x].data[y].split(/,/g)
 			
 			data.tickers[x].data[y] = {
 				"Date": dailyStats[0],
-				"Open": dailyStats[1],
-				"High": dailyStats[2],
-				"Low": dailyStats[3],
-				"Close": dailyStats[4],
-				"Volume": dailyStats[5],
-				"Adj. Close": dailyStats[6],
+				"Open": parseFloat(dailyStats[1]),
+				"High": parseFloat(dailyStats[2]),
+				"Low": parseFloat(dailyStats[3]),
+				"Close": parseFloat(dailyStats[4]),
+				"Volume": parseInt(dailyStats[5], 10),
+				"Adj. Close": parseFloat(dailyStats[6]),
 			}
 		}
 	}

@@ -8,8 +8,10 @@ $endDate = explode("-", $_POST['enddate']); // month-date-year
 $successCounter = 0;
 $failureCounter = 0;
 
-function getTickers ($ticker) {
-	$website = "http://real-chart.finance.yahoo.com/table.csv?s=" . $ticker . "&d=" . $enddate[0] . "&e=" . $startDate[1] . "&f=" . $startDate[2] . "&g=d&a=" . $startDate[0] . "&b=" . $startDate[1] . "&c=" . $startDate[2] . "&ignore=.csv";
+$sampleWebsite = "http://real-chart.finance.yahoo.com/table.csv?s=" . "[ticker]" . "&d=" . ($endDate[0] - 1) . "&e=" . $endDate[1] . "&f=" . $endDate[2] . "&g=d&a=" . ($startDate[0] - 1) . "&b=" . $startDate[1] . "&c=" . $startDate[2] . "&ignore=.csv";
+
+function getTickers ($ticker, $startDate, $endDate) {
+	$website = "http://real-chart.finance.yahoo.com/table.csv?s=" . $ticker . "&d=" . ($endDate[0] - 1) . "&e=" . $endDate[1] . "&f=" . $endDate[2] . "&g=d&a=" . ($startDate[0] - 1) . "&b=" . $startDate[1]. "&c=" . $startDate[2] . "&ignore=.csv";
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $website);
 	curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
@@ -27,7 +29,7 @@ $tickerData = array();
 for ($x = 0; $x < count($tickerArr); $x++) {
 	try {
 		$tickerData[$tickerArr[$x]] = array(
-			"data" => preg_split('/\r\n|\n|\r/', getTickers($tickerArr[$x]))
+			"data" => preg_split('/\r\n|\n|\r/', getTickers($tickerArr[$x], $startDate, $endDate))
 		);
 		$successCounter++;
 	} catch (Exception $e) {
@@ -41,13 +43,18 @@ for ($x = 0; $x < count($tickerArr); $x++) {
 $metaData = array(
 	"tickers" => $tickerArr,
 	"startDate" => array(
-		"month" => $startDate[0],
+		"month" => $startDate[0] - 1,
 		"date" => $startDate[1],
-		"year" => $startDate[2],
+		"year" => $startDate[2]
 	),
-	"endDate" => $endDate,
+	"endDate" => array(
+		"month" => $endDate[0] - 1,
+		"date" => $endDate[1],
+		"year" => $endDate[2]
+	),
 	"successfullyRetrieved" => $successCounter,
-	"failedToRetrieve" => $failureCounter
+	"failedToRetrieve" => $failureCounter,
+	"webAddress" => $sampleWebsite
 );
 
 echo json_encode(
