@@ -9,10 +9,10 @@ function parseAndProcess (data) {
 }
 
 function processDateLines (data) {
+	var dailyStats;
+	
 	for (x in data.tickers) {
 		for (var y = 0; y < data.tickers[x].data.length; y++) {
-			var counter = 0;
-
 			dailyStats = data.tickers[x].data[y].split(/,/g)
 			
 			data.tickers[x].data[y] = {
