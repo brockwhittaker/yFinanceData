@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript" src="vendor/nanoajax.js"></script>
+	<script type="text/javascript" src="js/recievedata.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+var site = "http://www.lavancier.com/yFinance/getTickers.php";
+
+nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest("INTC,AAPL,MSFT", "01-01-2005", "01-01-2015")}, function (code, responseText, request) {
+	data = parseAndProcess(responseText);
+});
+</script>
