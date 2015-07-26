@@ -9,10 +9,10 @@
 </html>
 <script type="text/javascript">
 var site = "http://www.lavancier.com/yFinance/getTickers.php";
-var tickers = "AAPL,MSFT,GOOGL";
-var startDate = "01-01-2005";
-var endDate = "01-01-2015";
-var body = "ticker=" + tickers + "&startdate=" + startDate + "&enddate=" + endDate;
+
+function formRequest (ticker, startDate, endDate) {
+	return "ticker=" + ticker.replace(/ /g, "") + "&startdate=" + startDate + "&enddate=" + endDate;
+}
 
 function parseAndProcess (data) {
 	data = JSON.parse(data);
@@ -39,7 +39,7 @@ function processDateLines (data) {
 	return data;
 }
 
-nanoajax.ajax({url: site, method: 'POST', body: body}, function (code, responseText, request) {
-	parseAndProcess(responseText);
+nanoajax.ajax({url: site, method: 'POST', body: formRequest("INTC,AAPL,MSFT", "01-01-2005", "01-01-2015")}, function (code, responseText, request) {
+	data = parseAndProcess(responseText);
 });
 </script>
