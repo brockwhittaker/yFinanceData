@@ -7,10 +7,34 @@
 	@import url(http://fonts.googleapis.com/css?family=Dancing+Script);
 
 	body {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 		font-family: Roboto, Helvetica Neue, Helvetica, Arial, Sans-Serif;
+		color: #444;
+		display: inline-block;
+		margin: 0;
+		text-align: center;
+		width: 100vw;
 	}
+
+	#loading {
+		margin-top: 20px;
+	}
+
 	#metadata {
 		font-family: monospace;
+	}
+
+	.input-container {
+		display: inline-block;
+		text-align: left;
+		margin: 0px 20px;
+	}
+
+	p {
+		font-size: 12pt;
+		font-weight: 500;
+		margin: 0;
 	}
 
 	pre {
@@ -19,6 +43,7 @@
 	    padding: 20px;
 	    margin: 20px 100px;
 	    color: white;
+	    text-align: left;
 	}
 	.string, .key {
 		color: #C1E8ED;
@@ -26,10 +51,53 @@
 	.number, .boolean, .null {
 		color: #E19999;
 	}
+
+	input {
+		font-family: Roboto, Helvetica Neue, Helvetica, Arial, Sans-Serif;
+		font-weight: 300;
+		width: 200px;
+		height: 30px;
+		font-size: 16pt;
+		border: none;
+		outline: none;
+		border-bottom: 2px solid #888;
+		background-color: #F5F5F5
+	}
+
+	#submit {
+		width: 200px;
+		height: 35px;
+		border: none;
+		outline: none;
+		background-color: #444;
+		color: white;
+		font-size: 12pt;
+		margin: 0px 20px;
+		box-shadow: 2px 2px 5px #CCC;
+		transition: all 0.2s ease;
+	}
+
+	#submit:hover {
+		box-shadow: 3px 3px 6px #CCC
+	}
+
+	#submit:active {
+		box-shadow: 1px 1px 1px #AAA
+	}
 	</style>
 </head>
 <body>
-	<div id='loading'>The data is downloading...</div>
+	<div class='input-container'>
+		<p class='title'>Starting Date</p><input type='date' id='start-date' focus></input>
+	</div>
+	<div class='input-container'>
+		<p class='title'>Ending Date</p><input type='date' id='end-date'></input>
+	</div><br />
+	<div class='input-container'>
+	<p class='title'>Ticker</p><input type='text' id='ticker' placeholder='AAPL, GOOGL'></input>
+	</div>
+	<button type='button' id='submit'>Get Quote</button>
+	<div id='loading'></div>
 	<div id='metadata'></div>
 	<script type="text/javascript" src="vendor/nanoajax.js"></script>
 	<script type="text/javascript" src="js/recieveData.js"></script>
@@ -60,18 +128,31 @@ function syntaxHighlight(json) {
         return '<span class="' + cls + '">' + match + '</span>';
     });
 }
+function submitFunction () {
+	document.getElementById('loading').innerHTML = "The data is downloading...";
 
-try {
-	nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest("AAPL", "05-05-2005", "05-05-2015")}, function (code, responseText, request) {
-		data = parseAndProcess(responseText);
-		document.getElementById('loading').innerHTML = "The data is now downloaded! Check in the console for the data under the variable 'data'.";
-		
-		var metadata = JSON.stringify(data.metadata, undefined, 4);
+	var startDate = document.getElementById('start-date').value.split(/-/g);
+	startDate = startDate[1] + "-" + startDate[2] + "-" + startDate[0];
 
-		output(syntaxHighlight(metadata));
-		//document.getElementById('metadata').innerHTML = JSON.stringify(data.metadata, null, 4); // spacing level = 2
-	});
-} catch (err) {
-	document.getElementById('loading').innerHTML = "There was an error downloading data. Please refresh the page.";
+	var endDate = document.getElementById('end-date').value.split(/-/g);
+	endDate = endDate[1] + "-" + endDate[2] + "-" + endDate[0];
+
+	var ticker = document.getElementById('ticker').value;
+
+	try {
+		nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest(ticker, startDate, endDate)}, function (code, responseText, request) {
+			data = parseAndProcess(responseText);
+			document.getElementById('loading').innerHTML = "The data is now downloaded! Check in the console for the data under the variable 'data'.";
+			
+			var metadata = JSON.stringify(data.metadata, undefined, 4);
+
+			output(syntaxHighlight(metadata));
+			//document.getElementById('metadata').innerHTML = JSON.stringify(data.metadata, null, 4); // spacing level = 2
+		});
+	} catch (err) {
+		document.getElementById('loading').innerHTML = "There was an error downloading data. Please refresh the page.";
+	}
 }
+
+document.getElementById('submit').addEventListener('click', submitFunction);
 </script>
