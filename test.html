@@ -1,9 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Yahoo Finance Data Demo | Lavancier</title>
+	<style type="text/css">
+	@import url(http://fonts.googleapis.com/css?family=Roboto:500,100,300,700,300italic,400);
+	@import url(http://fonts.googleapis.com/css?family=Dancing+Script);
+
+	body {
+		font-family: Roboto, Helvetica Neue, Helvetica, Arial, Sans-Serif;
+	}
+	#metadata {
+		font-family: monospace;
+	}
+
+	pre {
+		background-color: #353535;
+		border-radius: 4px;
+	    padding: 20px;
+	    margin: 20px 100px;
+	    color: white;
+	}
+	.string, .key {
+		color: #C1E8ED;
+	}
+	.number, .boolean, .null {
+		color: #E19999;
+	}
+	</style>
 </head>
 <body>
+	<div id='loading'>The data is downloading...</div>
+	<div id='metadata'></div>
 	<script type="text/javascript" src="vendor/nanoajax.js"></script>
 	<script type="text/javascript" src="js/recieveData.js"></script>
 </body>
@@ -11,7 +38,40 @@
 <script type="text/javascript">
 var site = "http://www.lavancier.com/yFinance/getTickers.php";
 
-nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest("AAPL", "05-05-2005", "05-05-2015")}, function (code, responseText, request) {
-	data = parseAndProcess(responseText);
-});
+function output(inp) {
+    document.body.appendChild(document.createElement('pre')).innerHTML = inp;
+}
+
+function syntaxHighlight(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+try {
+	nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest("AAPL", "05-05-2005", "05-05-2015")}, function (code, responseText, request) {
+		data = parseAndProcess(responseText);
+		document.getElementById('loading').innerHTML = "The data is now downloaded! Check in the console for the data under the variable 'data'.";
+		
+		var metadata = JSON.stringify(data.metadata, undefined, 4);
+
+		output(syntaxHighlight(metadata));
+		//document.getElementById('metadata').innerHTML = JSON.stringify(data.metadata, null, 4); // spacing level = 2
+	});
+} catch (err) {
+	document.getElementById('loading').innerHTML = "There was an error downloading data. Please refresh the page.";
+}
 </script>
