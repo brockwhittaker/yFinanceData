@@ -11,7 +11,10 @@ function parseAndProcess (data) {
 function processDateLines (data) {
 	for (x in data.tickers) {
 		for (var y = 0; y < data.tickers[x].data.length; y++) {
-			dailyStats = data.tickers[x].data[y].split(/,/g);
+			dailyStats = data.tickers[x].data[y].split(/,/g).map(function (n) {
+				return parseFloat(n);
+			});
+			
 			data.tickers[x].data[y] = {
 				"Date": dailyStats[0],
 				"Open": dailyStats[1],
