@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript" src="vendor/nanoajax.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+var site = "http://www.lavancier.com/yFinance/getTickers.php";
+var tickers = "AAPL,MSFT,GOOGL";
+var startDate = "01-01-2005";
+var endDate = "01-01-2015";
+var body = "ticker=" + tickers + "&startdate=" + startDate + "&enddate=" + endDate;
+
+function processDateLines (data) {
+	for (x in data.tickers) {
+		for (var y = 0; y < data.tickers[x].data.length; y++) {
+			dailyStats = data.tickers[x].data[y].split(/,/g);
+			data.tickers[x].data[y] = {
+				"Date": dailyStats[0],
+				"Open": dailyStats[1],
+				"High": dailyStats[2],
+				"Low": dailyStats[3],
+				"Close": dailyStats[4],
+				"Volume": dailyStats[5],
+				"Adj. Close": dailyStats[6],
+			}
+		}
+	}
+
+	return data;
+}
+
+nanoajax.ajax({url: site, method: 'POST', body: body}, function (code, responseText, request) {
+	data = JSON.parse(responseText);
+	data = processDateLines(data);
+
+});
+</script>
