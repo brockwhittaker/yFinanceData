@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-	<script type="text/javascript" src="vendor/nanoajax.js"></script>
-</body>
-</html>
-<script type="text/javascript">
-var site = "http://www.lavancier.com/yFinance/getTickers.php";
-
 function formRequest (ticker, startDate, endDate) {
 	return "ticker=" + ticker.replace(/ /g, "") + "&startdate=" + startDate + "&enddate=" + endDate;
 }
@@ -38,8 +26,3 @@ function processDateLines (data) {
 
 	return data;
 }
-
-nanoajax.ajax({url: site, method: 'POST', body: formRequest("INTC,AAPL,MSFT", "01-01-2005", "01-01-2015")}, function (code, responseText, request) {
-	data = parseAndProcess(responseText);
-});
-</script>
