@@ -14,6 +14,11 @@ var startDate = "01-01-2005";
 var endDate = "01-01-2015";
 var body = "ticker=" + tickers + "&startdate=" + startDate + "&enddate=" + endDate;
 
+function parseAndProcess () {
+	data = JSON.parse(responseText);
+	data = processDateLines(data);
+}
+
 function processDateLines (data) {
 	for (x in data.tickers) {
 		for (var y = 0; y < data.tickers[x].data.length; y++) {
@@ -34,8 +39,6 @@ function processDateLines (data) {
 }
 
 nanoajax.ajax({url: site, method: 'POST', body: body}, function (code, responseText, request) {
-	data = JSON.parse(responseText);
-	data = processDateLines(data);
-
+	parseAndProcess();
 });
 </script>
