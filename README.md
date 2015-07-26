@@ -42,17 +42,18 @@ The data that you will recieve will be in JSON format with the following structu
     },
     failedToRetrieve: 0,
     successfullyRetreived: 3,
-    tickers: ["INTC", "AAPL", "MSFT"]
+    tickers: ["INTC", "AAPL", "MSFT"],
+    webAddress: "http://real-chart.finance.yahoo.com/table.csv?s=[ticker]&d=0&e=01&f=2015&g=d&a=0&b=01&c=2005&ignore=.csv"
   },
   tickers: {
     "AAPL" : {
-      "data" : data
+      "data" : [data]
     },
     "INTC" : {
-      "data" : data
+      "data" : [data]
     },
     "MSFT" : {
-      "data" : data
+      "data" : [data]
     }
   }
 }
@@ -62,7 +63,7 @@ The sections are broken down into days in each ticker's data. Each day should ha
 
 ```javascript
 {
-  "Date":2015,
+  "Date": "01-01-2015",
   "Open":124.940002,
   "High":126.230003,
   "Low":124.849998,
@@ -72,4 +73,10 @@ The sections are broken down into days in each ticker's data. Each day should ha
 }
 ```
 
-The values are floats so there' no need for parsing.
+The values are mostly floats so there's no need for parsing. The only non-floats are volume (expressed in integer of full trades), and the date (a string in MM-DD-YYYY format).
+
+###Demo
+A full working demo that is the same as `test.html` is currently live [on my site](http://www.lavancier.com/yFinance/test.html).
+To check out the results, go into console and check out the variable `data`.
+
+Any questions or concerns, email me at [brock@lavancier.com](brock@lavancier.com).
