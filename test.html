@@ -17,6 +17,10 @@
 		width: 100vw;
 	}
 
+	#container {
+		margin-top: 50px;
+	}
+
 	#loading {
 		margin-top: 20px;
 	}
@@ -87,18 +91,20 @@
 	</style>
 </head>
 <body>
-	<div class='input-container'>
-		<p class='title'>Starting Date</p><input type='date' id='start-date' focus></input>
+	<div id='container'>
+		<div class='input-container'>
+			<p class='title'>Starting Date</p><input type='date' id='start-date' focus></input>
+		</div>
+		<div class='input-container'>
+			<p class='title'>Ending Date</p><input type='date' id='end-date'></input>
+		</div><br />
+		<div class='input-container'>
+		<p class='title'>Ticker</p><input type='text' id='ticker' placeholder='AAPL, GOOGL'></input>
+		</div>
+		<button type='button' id='submit'>Get Quote</button>
+		<div id='loading'></div>
+		<div id='metadata'></div>
 	</div>
-	<div class='input-container'>
-		<p class='title'>Ending Date</p><input type='date' id='end-date'></input>
-	</div><br />
-	<div class='input-container'>
-	<p class='title'>Ticker</p><input type='text' id='ticker' placeholder='AAPL, GOOGL'></input>
-	</div>
-	<button type='button' id='submit'>Get Quote</button>
-	<div id='loading'></div>
-	<div id='metadata'></div>
 	<script type="text/javascript" src="vendor/nanoajax.js"></script>
 	<script type="text/javascript" src="js/recieveData.js"></script>
 </body>
