@@ -16,14 +16,19 @@ In the JavaScript file `recieveData.js` you can easily produce this string by us
 function formRequest (ticker, startDate, endDate) {
 	return "ticker=" + ticker.replace(/ /g, "") + "&startdate=" + startDate + "&enddate=" + endDate;
 }
-````
 
-Then send an AJAX request to the server-side PHP with the POST header created by formRequest.
-
-```javascript
 formRequest ("AAPL,GOOGL,MSFT,TSCO", "01-01-2005", "01-01-2015");
 // ticker=AAPL,GOOGL,MSFT,TSCO&startdate=01-01-2005&enddate=01-01-2015
 ```
+
+Then send an AJAX request to the server-side PHP with the POST header created by formRequest. An example with `nanoajax.js`, which is in the vendor section of this repo is:
+
+```javascript
+nanoajax.ajax({url: "php/getTickers.php", method: 'POST', body: formRequest("AAPL,SPY", "01-15-1980", "07-24-2015")}, function (code, responseText, request) {
+	data = parseAndProcess(responseText);
+});
+```
+
 
 The data that you will recieve will be in JSON format with the following structure:
 
